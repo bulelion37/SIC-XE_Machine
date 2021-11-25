@@ -12,6 +12,6 @@ $(TARGET): $(OBJS)
 #-Wall : make every warning, -O2 : optimization
 
 clean : 
-	rm -f $(OBJS) $(TARGET)
+	rm -f $(OBJS) $(TARGET) *lst *obj
 
 20161598.out : 20161598.c 20161598.h

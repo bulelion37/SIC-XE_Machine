@@ -31,9 +31,9 @@ SYM* before;	//before is pointing previous SYM node
 typedef struct _Modi {
 	int start_addr;
 	struct _Modi* next;
-}Modi;
-Modi* modi_head;
-Modi* modi_prev;
+}Modi;	//Modi : struch which store modication info
+Modi* modi_head;	//modi_head is pointing first of Modification linked list
+Modi* modi_prev;	//modi_prev is pointing previous node of Modification linked list
 
 char command[100];	//variable which get input command
 int line_num;		//variable which get history's line index
@@ -60,6 +60,7 @@ int obj_loc;		//variable which stores obj code's starting address
 int asm_start_flag;	//flag if there is start in the .asm file, it becomes 1
 int lst_line_num = 5;	// variable which stores line_number in lst file
 int pass_1_flag;		//flag if pass1 is success, becomes 1
+int SYMTAB_flag;
 
 void command_distinct(char* arr);
 void command_help();
@@ -92,7 +93,7 @@ void change_hex(char* bin, char* hex, int format_num);
 void disp_addr_set(char* arr, int num, int format_type);
 char hex_char_return(int num);
 void xbpe_setting(char* value, int x, int b, int p, int e);
-void register_num(char* arr, char* reg, int index);
+void register_num(char* arr, char* reg);
 
 /*-------------------------------------*/
 /* func_name : command_distinct        */
@@ -293,6 +294,7 @@ void command_distinct(char* arr)
 		memset(line_symbol, 0, sizeof(line_symbol));
 		memset(file_name, 0,sizeof(file_name));
 		memset(BASE_str, 0, sizeof(BASE_str));
+		memset(text_record, 0, sizeof(text_record));
 		symbol_flag = 0;
 		asm_start_flag = 0;
 		first = NULL;
@@ -300,14 +302,19 @@ void command_distinct(char* arr)
 		modi_head = NULL;
 		modi_prev = NULL;
 		pass_1_flag=0;
+		lst_line_num=5;
+		SYMTAB_flag = 0;
 
-		//If got blank after type
+		//If got blank after assemble
 		if (arr[8] == ' ')
 		{
 			error_flag--;
 			command_assemble();
 			if (error_flag == 0)
-				printf("Successfully assemble %s.\n", file_name);
+			{
+					printf("Successfully assemble %s.\n", file_name);
+					SYMTAB_flag = 1;
+			}
 			else
 			{	
 					if(pass_1_flag==0)
@@ -321,8 +328,12 @@ void command_distinct(char* arr)
 	// If symbol entered, call command_symbol()
 	else if (!strncmp(arr, "symbol", 6))
 	{
-		error_flag--;
-		command_symbol();
+		//if there was error while assemble
+		if(!SYMTAB_flag)
+			printf("Symbol Error ! : No SYMTAB!\n");
+		else{
+				error_flag--;
+				command_symbol();}
 	}
 	//if error_flag is 1 then invalid command, so delete the node from the history.	
 	if(error_flag)
@@ -1187,9 +1198,9 @@ int distinct_ascii(char x){
 }
 
 /*-------------------------------------*/
-/* func_name : command_type             */
+/* func_name : command_type            */
 /* purpose : read the filename file    */
-/*   	     and print file's contents 	     	   */
+/*   	     and print file's contents */
 /* return  : none                      */
 /*-------------------------------------*/
 void command_type()
@@ -1207,12 +1218,12 @@ void command_type()
 		}
 }
 
-/*-------------------------------------*/
-/* func_name : get_filename             */
-/* purpose : get the filename information    */
-/*   	     and store into file_name array 	     	   */
-/* return  : none                      */
-/*-------------------------------------*/
+/*------------------------------------------*/
+/* func_name : get_filename                 */
+/* purpose : get the filename information   */
+/*   	     and store into file_name array */
+/* return  : none                           */
+/*------------------------------------------*/
 void get_filename(char* arr, int i)
 {
 	int j = 0;		//index of file_name
@@ -1226,17 +1237,17 @@ void get_filename(char* arr, int i)
 	}
 }
 
-/*-------------------------------------*/
-/* func_name : divide_one_line             */
-/* purpose : get one line in the assembly code   */
-/*   	      	 and get information about opcode, operand, symbol    	   */
-/* return  : 0 : opcode=start, 1 : opcode=end, -1 : comment line                     */
-/*-------------------------------------*/
+/*------------------------------------------------------------------*/
+/* func_name : divide_one_line             							*/
+/* purpose : get one line in the assembly code   					*/
+/*   	      	 and get information about opcode, operand, symbol  */
+/* return  : 0 : opcode=start, 1 : opcode=end, -1 : comment line    */
+/*------------------------------------------------------------------*/
 int divide_one_line(char* arr, int pass_num)
 {
 	int i = 0, j = 0, k = 0, l = 0, cnt_blank = 0, comma_flag = 0;	//comma_flag : 1 -> need to get another operand even if there is blank
 	
-	//if this function is called in funtion 2
+	//if this function is called in pass 2
 	if (pass_num == 2)
 	{
 		char line_loc[4] = { 0 };
@@ -1342,12 +1353,12 @@ int divide_one_line(char* arr, int pass_num)
 }
 
 
-/*-------------------------------------*/
-/* func_name : command_assemble             */
-/* purpose : read the filename file    */
-/*   	     and print file's contents 	     	   */
-/* return  : none                      */
-/*-------------------------------------*/
+/*-----------------------------------------------*/
+/* func_name : command_assemble             	 */
+/* purpose : assemble file_name, through pass1,2 */
+/*   	     make .obj, .lst file 	     	   	 */
+/* return  : none                      			 */
+/*-----------------------------------------------*/
 void command_assemble()
 {
 	char obj_name[31] = { 0 };
@@ -1415,7 +1426,6 @@ void command_assemble()
 		symbol_flag = 0;
 
 		//Get one line
-		//fgets(one_line, 100, fp);
 		if (fgets(one_line, 100, fp) == NULL)
 		{
 			//if one_line is NULL, it means there is no END opcode, so print error message
@@ -1548,7 +1558,7 @@ void command_assemble()
 			fprintf(inter, "%d\t%.4X\t%s", lst_line_num, loc, one_line);
 			lst_line_num += 5;		//add 5 to line number
 
-			loc += 3 * atoi(line_operand);
+			loc += 3 * atoi(line_operand); //add decimal number of operand * 3 to LOCCTR
 		}
 		else if (!strcmp(line_opcode, "RESB"))
 		{
@@ -1556,7 +1566,7 @@ void command_assemble()
 			fprintf(inter, "%d\t%.4X\t%s", lst_line_num, loc, one_line);
 			lst_line_num += 5;		//add 5 to line number
 
-			loc += atoi(line_operand);
+			loc += atoi(line_operand); //add decimal number of operand to LOCCTR
 		}
 		else if (!strcmp(line_opcode, "BYTE"))
 		{
@@ -1836,7 +1846,7 @@ void command_assemble()
 			}
 
 			//Write listing line
-			fprintf(lst_fp, "%-35s\t%-35s\n", one_line, result_obj_code);
+			fprintf(lst_fp, "%-50s %-35s\n", one_line, result_obj_code);
 			printed_flag++;
 
 			//f there was variable before, then already printed object code, so make flag to 0
@@ -1888,17 +1898,18 @@ void command_assemble()
 	remove("intermediate");
 	if(error_flag)
 	{
+			//if there is error during pass2, remove .obj, .lst file
 			remove(obj_name);
 			remove(lst_name);
 	}
 }
 
-/*----------------------------------------*/
-/* func_name : find_opcode             */
-/* purpose : find input mnemonic from     */
-/*   	     hash table   */
-/* return  : 0 if there is no such input mnemonic, if found return num of format                        */
-/*----------------------------------------*/
+/*----------------------------------------------------------------------------------*/
+/* func_name : find_opcode             												*/
+/* purpose : find input mnemonic from     											*/
+/*   	     hash table  														    */
+/* return  : 0 if there is no such input mnemonic, if found return num of format    */
+/*----------------------------------------------------------------------------------*/
 int  find_opcode(char *arr, int i) {
 
 	char temp_mnemonic[7] = { 0 };	//arr stores input mnemonic
@@ -1944,12 +1955,12 @@ int  find_opcode(char *arr, int i) {
 	return mnemonic_format;
 }
 
-/*----------------------------------------*/
-/* func_name : command_symbol         */
-/* purpose : print all symbol's lable and LOC       */
-/*   	    by ascending order            */
-/* return  : none                         */
-/*----------------------------------------*/
+/*---------------------------------------------*/
+/* func_name : command_symbol         		   */
+/* purpose : print all symbol's label and LOC  */
+/*   	    by ascending order                 */
+/* return  : none                              */
+/*---------------------------------------------*/
 void command_symbol() {
 	SYM* cur = first;
 	if (first) {
@@ -1958,16 +1969,17 @@ void command_symbol() {
 	}
 	else
 	{
+		//if there is no SYMTAB
 		error_flag = 1;
 		printf("Error : No SYMTAB!\n");
 	}
 }
 
-/*----------------------------------------*/
-/* func_name : free_symtab        */
+/*--------------------------------------------------------------------*/
+/* func_name : free_symtab        									  */
 /* purpose : free all symbol table and modification linked list       */
-/* return  : none                         */
-/*----------------------------------------*/
+/* return  : none                         							  */
+/*--------------------------------------------------------------------*/
 void free_symtab()
 {
 	//if SYMTAB's linked list exists, free every memory
@@ -2001,14 +2013,14 @@ void free_symtab()
 
 
 /*----------------------------------------*/
-/* func_name : distinct_format        */
-/* purpose : get opcode and operand        */
-/*			and make object code */
-/* return  : object code character array             */
+/* func_name : distinct_format        	  */
+/* purpose : get opcode and operand       */
+/*			and make object code 		  */
+/* return  : object code character array  */
 /*----------------------------------------*/
 void distinct_format(char* opcode, char*operand)
 {
-	char result_obj_before_bind[130] = { 0 };	//arr which sotres obj code before 4
+	char result_obj_before_bind[130] = { 0 };	//arr which stores obj code before binding
 	int opcode_format = 0;	//variable which stores opcode's format number
 	int x_flag = 0;	//flag which use x register or not
 	int b_flag = 0;	//flag which use b register or not
@@ -2122,7 +2134,6 @@ void distinct_format(char* opcode, char*operand)
 		//store disp number
 		disp_addr_set(result_obj_code, addr,4);
 
-		//return result_obj_code;
 	}
 	//if Byte constant input
 	else if (!strcmp(opcode, "BYTE"))
@@ -2219,7 +2230,7 @@ void distinct_format(char* opcode, char*operand)
 				if (operand[operand_index] == ',')
 				{
 					//store register number into the result_obj_before_bind arr
-					register_num(result_obj_before_bind, register_arr, 8);
+					register_num(result_obj_before_bind, register_arr);
 					register_index = 0;
 					operand_index++;
 					comma_flag++;
@@ -2229,18 +2240,18 @@ void distinct_format(char* opcode, char*operand)
 			
 			//store register number into the result_obj_before_bind arr
 			if (comma_flag)
-				register_num(result_obj_before_bind, register_arr, 12);
+				register_num(result_obj_before_bind, register_arr);
 			else
 			{
 				//if only one register is in line
-				register_num(result_obj_before_bind, register_arr, 8);
+				register_num(result_obj_before_bind, register_arr);
 
 				//store all zero to the register 2 number
 				strcat(result_obj_before_bind, "0000");
 			}
 
 			//change binary number into hexa number
-			change_hex(result_obj_before_bind, result_obj_code, 2);
+			change_hex(result_obj_before_bind, result_obj_code,2);
 		}
 		//Format3
 		else
@@ -2369,7 +2380,8 @@ void distinct_format(char* opcode, char*operand)
 
 					operand_index++;
 				}
-
+				
+				//find symbol in SYMTAB
 				int symbol_length = find_symbol(pure_operand);
 
 				if (symbol_length == -1)
@@ -2378,8 +2390,6 @@ void distinct_format(char* opcode, char*operand)
 					error_flag = 1;
 					return;
 				}
-
-				//find symbol in SYMTAB
 				disp = symbol_length - pc;
 
 				//if absolute value of difference between operand and pc is over 2047, it is impossible in format 3, so make it BASE relative
@@ -2413,11 +2423,12 @@ void distinct_format(char* opcode, char*operand)
 						disp = symbol_length - find;
 
 						//if disp is base relative and still out of bound print error message. 
-						if (abs(disp) > 4095)
+						if (abs(disp) > 2047)
 						{
-								printf("Assemble Error in line %d : Address out of bound!\n", lst_line_num);
+								if(disp > 0 || (disp < 0 && abs(disp)>2048 ) )
+								{printf("Assemble Error in line %d : Address out of bound!\n", lst_line_num);
 								error_flag = 1;
-								return;
+								return;}
 						}
 					}
 					
@@ -2436,10 +2447,10 @@ void distinct_format(char* opcode, char*operand)
 }
 
 /*----------------------------------------*/
-/* func_name : num_to_hexchar        */
-/* purpose : change int number into hex        */
-/*			and store in character array */
-/* return  :	none             */
+/* func_name : num_to_hexchar        	  */
+/* purpose : change int number into hex   */
+/*			and store in character array  */
+/* return  :	none             		  */
 /*----------------------------------------*/
 void num_to_hexchar(char* value, int num)
 {
@@ -2506,12 +2517,12 @@ void num_to_hexchar(char* value, int num)
 	}
 }
 
-/*----------------------------------------*/
-/* func_name : xbpe_setting        */
+/*-------------------------------------------*/
+/* func_name : xbpe_setting       		  	 */
 /* purpose : set value int the value array   */
-/*				depends on x,b,p,e value        */
-/* return  :	none             */
-/*----------------------------------------*/
+/*				depends on x,b,p,e value     */
+/* return  :	none             			 */
+/*-------------------------------------------*/
 void xbpe_setting(char *value, int x, int b, int p, int e)
 {
 	if (x == 1)
@@ -2536,10 +2547,10 @@ void xbpe_setting(char *value, int x, int b, int p, int e)
 }
 
 /*----------------------------------------*/
-/* func_name : find_symbol             */
+/* func_name : find_symbol                */
 /* purpose : find symbol in the SYMTAB    */
-/*   	     return symbol's LOCCTR   */
-/* return  : symbol's LOCCTR                        */
+/*   	     return symbol's LOCCTR   	  */
+/* return  : symbol's LOCCTR              */
 /*----------------------------------------*/
 int find_symbol(char* operand) {
 	SYM* cur=first;
@@ -2554,12 +2565,12 @@ int find_symbol(char* operand) {
 	return -1;
 }
 
-/*----------------------------------------* /
-/* func_name : change_hex            */
+/*-------------------------------------------------------*/
+/* func_name : change_hex            					 */
 /* purpose : change binary number character array into   */
-/*   	     hex array   */
-/* return  : none                        */
-/*----------------------------------------*/
+/*   	     hex array   								 */
+/* return  : none                         				 */
+/*-------------------------------------------------------*/
 void change_hex(char* bin, char* hex, int format_num)
 {
 	int k = 0;			//index of hex array
@@ -2611,11 +2622,11 @@ void change_hex(char* bin, char* hex, int format_num)
 
 }
 
-/*----------------------------------------* /
-/* func_name : hex_char_return            */
-/* purpose : change int number into hex character   */
-/* return  : none                        */
-/*----------------------------------------*/
+/*----------------------------------------		  */
+/* func_name : hex_char_return            		  */
+/* purpose : change int number into hex character */
+/* return  : none                        		  */
+/*------------------------------------------------*/
 char hex_char_return(int num)
 {
 	switch (num)
@@ -2672,12 +2683,12 @@ char hex_char_return(int num)
 }
 
 
-/*----------------------------------------*/
-/* func_name : disp_addr_set            */
+/*----------------------------------------------*/
+/* func_name : disp_addr_set            		*/
 /* purpose : put disp or address number into    */
-/*   	     result object code character array   */
-/* return  : symbol's LOCCTR                        */
-/*----------------------------------------*/
+/*   	     result object code character array */
+/* return  : symbol's LOCCTR                    */
+/*----------------------------------------------*/
 void disp_addr_set(char *arr, int num, int format_type)
 {
 	int i = 3, quotient = 0; // index of arr, and variable which stores quotient 
@@ -2807,12 +2818,12 @@ void disp_addr_set(char *arr, int num, int format_type)
 }
 
 /*----------------------------------------*/
-/* func_name : register_num            */
-/* purpose : get register character and    */
-/*   	     store number in the array   */
-/* return  : none                       */
+/* func_name : register_num               */
+/* purpose : get register character and   */
+/*   	     store number in the array    */
+/* return  : none                         */
 /*----------------------------------------*/
-void register_num(char *arr, char* reg, int index)
+void register_num(char *arr, char* reg)
 {
 	if (!strcmp(reg, "A"))
 		strcat(arr, "0000");
