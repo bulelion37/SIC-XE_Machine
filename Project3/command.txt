@@ -1,0 +1,43 @@
+progaddr 4000
+loader proga.obj progb.obj progc.obj
+progaddr 0
+loader copy.obj
+bp 3
+bp 2a
+bp a
+bp d
+bp 10
+bp 1a
+bp 1d
+bp 20
+bp 23
+bp 26
+bp 105d
+bp 105f
+bp 1062
+bp 1065
+bp 1068
+bp 106b
+bp 106e
+bp 1070
+bp 1073
+bp 1024
+bp 6
+bp 1036
+bp 1038
+bp 103a
+bp 103c
+bp 1040
+bp 1043
+bp 1046
+bp 1049
+bp 104b
+bp 1056
+bp 1059
+run
+
+
+1. run시 일단 한 번 pc랑 register 계산 하고 그 다음에 breakpoint랑 비교,
+단, 제일 처음 시작할 때 0번지 breakpoint인 경우 제외
+
+2. n, i 둘다 0인 경우 어케함?

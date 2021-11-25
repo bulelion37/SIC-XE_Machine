@@ -1,0 +1,272 @@
+sicsim> run
+A : 000000  X : 000000
+L : 001077 PC : 000003
+B : 000000  S : 000000
+T : 000000
+                Stop at checkpoint[3]
+sicsim> run
+A : 000000  X : 000000
+L : 001077 PC : 000006
+B : 000033  S : 000000
+T : 000000
+                Stop at checkpoint[6]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001036
+B : 000033  S : 000000
+T : 000000
+                Stop at checkpoint[1036]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001038
+B : 000033  S : 000000
+T : 000000
+                Stop at checkpoint[1038]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 00103A
+B : 000033  S : 000000
+T : 000000
+                Stop at checkpoint[103A]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 00103C
+B : 000033  S : 000000
+T : 000000
+                Stop at checkpoint[103C]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001040
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1040]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001043
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1043]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001046
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1046]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001049
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1049]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 00104B
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[104B]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001056
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1056]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 001059
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1059]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 00000A
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[A]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 00000D
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[D]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 000010
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[10]
+sicsim> run
+A : 000000  X : 000000
+L : 00000A PC : 00001A
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1A]
+sicsim> run
+A : 454F46  X : 000000
+L : 00000A PC : 00001D
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[1D]
+sicsim> run
+A : 454F46  X : 000000
+L : 00000A PC : 000020
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[20]
+sicsim> run
+A : 000003  X : 000000
+L : 00000A PC : 000023
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[23]
+sicsim> run
+A : 000003  X : 000000
+L : 00000A PC : 000026
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[26]
+sicsim> run
+A : 000003  X : 000000
+L : 00002A PC : 00105D
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[105D]
+sicsim> run
+A : 000003  X : 000000
+L : 00002A PC : 00105F
+B : 000033  S : 000000
+T : 001000
+                Stop at checkpoint[105F]
+sicsim> run
+A : 000003  X : 000000
+L : 00002A PC : 001062
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1062]
+sicsim> run
+A : 000003  X : 000000
+L : 00002A PC : 001065
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1065]
+sicsim> run
+A : 000003  X : 000000
+L : 00002A PC : 001068
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1068]
+sicsim> run
+A : 000045  X : 000000
+L : 00002A PC : 00106B
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[106B]
+sicsim> run
+A : 000045  X : 000000
+L : 00002A PC : 00106E
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[106E]
+sicsim> run
+A : 000045  X : 000001
+L : 00002A PC : 001070
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1070]
+sicsim> run
+A : 000045  X : 000001
+L : 00002A PC : 001062
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1062]
+sicsim> run
+A : 000045  X : 000001
+L : 00002A PC : 001065
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1065]
+sicsim> rum
+ERROR: Wrong Input
+sicsim> run
+A : 000045  X : 000001
+L : 00002A PC : 001068
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1068]
+sicsim> run
+A : 00004F  X : 000001
+L : 00002A PC : 00106B
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[106B]
+sicsim> run
+A : 00004F  X : 000001
+L : 00002A PC : 00106E
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[106E]
+sicsim> run
+A : 00004F  X : 000002
+L : 00002A PC : 001070
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1070]
+sicsim> run
+A : 00004F  X : 000002
+L : 00002A PC : 001062
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1062]
+sicsim> run
+A : 00004F  X : 000002
+L : 00002A PC : 001065
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1065]
+sicsim> run
+A : 00004F  X : 000002
+L : 00002A PC : 001068
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1068]
+sicsim> run
+A : 000046  X : 000002
+L : 00002A PC : 00106B
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[106B]
+sicsim> run
+A : 000046  X : 000002
+L : 00002A PC : 00106E
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[106E]
+sicsim> run
+A : 000046  X : 000003
+L : 00002A PC : 001070
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1070]
+sicsim> run
+A : 000046  X : 000003
+L : 00002A PC : 001073
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1073]
+sicsim> run
+A : 000046  X : 000003
+L : 00002A PC : 00002A
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[2A]
+sicsim> run
+A : 000046  X : 000003
+L : 00002A PC : 001077
+B : 000033  S : 000000
+T : 000003
+                Stop at checkpoint[1077]
+sicsim> run
+A : 000046  X : 000003
+L : 00002A PC : 001077
+B : 000033  S : 000000
+T : 000003
+                End Program
